@@ -1,7 +1,8 @@
 package routes
 
 import (
-	todo "todo/controllers"
+	todo "todo/controllers/todo"
+	user "todo/controllers/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +16,9 @@ func SetupRouter() *gin.Engine {
 		v1.GET("todo/:id", todo.GetATodo)
 		v1.DELETE("todo/:id", todo.DeleteTodo)
 		v1.PUT("todo", todo.UpdateATodo)
+
+		v1.GET("user/:id", user.GetInfoById)
+		v1.POST("user/create", user.CreateUser)
 	}
 	return r
 }

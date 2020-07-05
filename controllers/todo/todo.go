@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-const TodoCollection = "todo"
+// const TodoCollection = "todo"
 
 func CreateATodo(c *gin.Context) {
 	type Json struct {
