@@ -4,7 +4,7 @@ import (
 	"todo/config"
 	initapp "todo/init"
 	"todo/module/ginvalid"
-	"todo/redis"
+	"todo/redisapp"
 	"todo/routes"
 )
 
@@ -14,7 +14,7 @@ func main() {
 	ginvalid.RegisterValidation()
 
 	initapp.SetORM()
-	redis.StartRedis()
+	redisapp.StartRedis()
 	r := routes.SetupRouter()
 	r.Run()
 }

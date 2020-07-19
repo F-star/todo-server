@@ -3,6 +3,7 @@ package models
 import (
 	"crypto/sha1"
 	"database/sql"
+	"errors"
 	"fmt"
 	"math/rand"
 	"strconv"
@@ -46,17 +47,34 @@ func getHashWithPwdAndSalt(password string, salt string) string {
 }
 
 func CreateUser(name string, password string) error {
-	// hash password + salt
+	// TODO: not allow same userName
 	salt := getRandStr(8)
-	password = getHashWithPwdAndSalt(password, salt)
+	passwordHash := getHashWithPwdAndSalt(password, salt)
 
 	user := User{
 		Name:     name,
-		Password: password,
+		Password: passwordHash,
 		Salt:     salt,
 	}
 	if err := config.DB.Create(&user).Error; err != nil {
 		return err
 	}
 	return nil
+}
+
+func CheckUsernameAndPassword(name string, password string) error {
+	// return Error
+	user := User{
+		Name: name,
+	}
+	if err := config.DB.First(&user).Error; err != nil {
+		return err
+	}
+
+	passwordHash := getHashWithPwdAndSalt(password, user.Salt)
+	if passwordHash == user.Password {
+		return nil
+	} else {
+		return errors.New("wrong password")
+	}
 }

@@ -1,4 +1,4 @@
-package redis
+package redisapp
 
 import (
 	"context"
@@ -7,8 +7,10 @@ import (
 	"github.com/go-redis/redis/v8"
 )
 
+var Rdb *redis.Client
+
 func StartRedis() {
-	rdb := redis.NewClient(&redis.Options{
+	Rdb := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
 		DB:       0,  // use default DB
@@ -16,7 +18,7 @@ func StartRedis() {
 
 	// try ping
 	ctx := context.Background()
-	pong, err := rdb.Ping(ctx).Result()
+	pong, err := Rdb.Ping(ctx).Result()
 	fmt.Println("----- redis ping test ------")
 	fmt.Println(pong, err)
 	fmt.Println("---------- end -------------")
