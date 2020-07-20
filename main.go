@@ -11,10 +11,9 @@ import (
 func main() {
 	defer config.DB.Close()
 	initapp.SetEnv()
-	ginvalid.RegisterValidation()
-
-	initapp.SetORM()
 	redisapp.StartRedis()
+	ginvalid.RegisterValidation()
+	initapp.SetORM()
 	r := routes.SetupRouter()
 	r.Run()
 }

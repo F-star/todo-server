@@ -18,7 +18,7 @@ func SetupRouter() *gin.Engine {
 		v1.PUT("todo", todo.UpdateATodo)
 
 		v1.GET("user/:id", user.GetInfoById)
-		v1.POST("user/create", user.CreateUser)
+		v1.POST("user/create", user.Register)
 	}
 	return r
 }

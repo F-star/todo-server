@@ -3,6 +3,7 @@ package user
 import (
 	"net/http"
 	"todo/models"
+	"todo/module/session"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,7 +14,7 @@ func GetInfoById(c *gin.Context) {
 	})
 }
 
-func CreateUser(c *gin.Context) {
+func Register(c *gin.Context) {
 	json := struct {
 		Name     string `json:"name" binding:"required,min=2,max=5"`
 		Password string `json:"password" binding:"required,password"`
@@ -25,14 +26,19 @@ func CreateUser(c *gin.Context) {
 		})
 		return
 	}
-	if err := models.CreateUser(json.Name, json.Password); err != nil {
+	if uid, err := models.CreateUser(json.Name, json.Password); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			// "error": 2,
 			"msg": err.Error(),
 		})
 		return
+	} else {
+		// 设置 session
+		sid := session.NewSession(uid)
+		c.SetCookie("sid", sid, 3600, "/", "localhost", false, true)
+		c.String(http.StatusOK, "success")
 	}
-	c.String(http.StatusOK, "success")
+
 }
 
 func loginByPassword(c *gin.Context) {

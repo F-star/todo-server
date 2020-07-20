@@ -13,7 +13,7 @@ import (
 )
 
 type User struct {
-	ID        uint           `json:"id" gorm:"primary_key"`
+	ID        int64          `json:"id" gorm:"primary_key"`
 	Name      string         `json:"name" gorm:"type:char(24);not null"`
 	Avator    sql.NullString `json:"avator" gorm:"type:char(50)"`
 	Password  string         `json:"password" gorm:"type:char(40)"`     // sha1 password: 40
@@ -46,7 +46,7 @@ func getHashWithPwdAndSalt(password string, salt string) string {
 	return fmt.Sprintf("%x", h)
 }
 
-func CreateUser(name string, password string) error {
+func CreateUser(name string, password string) (string, error) {
 	// TODO: not allow same userName
 	salt := getRandStr(8)
 	passwordHash := getHashWithPwdAndSalt(password, salt)
@@ -57,9 +57,9 @@ func CreateUser(name string, password string) error {
 		Salt:     salt,
 	}
 	if err := config.DB.Create(&user).Error; err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return strconv.FormatInt(user.ID, 10), nil
 }
 
 func CheckUsernameAndPassword(name string, password string) error {

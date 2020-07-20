@@ -9,7 +9,7 @@ import (
 	"todo/redisapp"
 )
 
-var prefix = "session:"
+var prefix = "todo:session:"
 
 func createRandomSID() (sid string) {
 	ts := time.Now().Unix()
@@ -21,12 +21,11 @@ func createRandomSID() (sid string) {
 	return tsStr + randHex
 }
 
-// default 1 day validtime
 func NewSession(uid string) (sid string) {
 	// return "session:" + uid
 	ctx := context.Background()
 	sid = createRandomSID()
-	err := redisapp.Rdb.Set(ctx, prefix+sid, uid, 24*time.Hour).Err()
+	err := redisapp.Rdb.Set(ctx, prefix+sid, uid, time.Hour).Err() // 默认 1 小时
 	if err != nil {
 		log.Println(err)
 	}
