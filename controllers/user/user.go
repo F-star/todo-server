@@ -41,7 +41,7 @@ func Register(c *gin.Context) {
 
 }
 
-func loginByPassword(c *gin.Context) {
+func LoginByPassword(c *gin.Context) {
 	json := struct {
 		Name     string `json:"name" binding:"required,min=2,max=5"`
 		Password string `json:"password" binding:"required,password"`
@@ -52,12 +52,17 @@ func loginByPassword(c *gin.Context) {
 			"msg": err.Error(),
 		})
 	}
-	if err := models.CheckUsernameAndPassword(json.Name, json.Password); err != nil {
+	uid, err := models.CheckUsernameAndPassword(json.Name, json.Password)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			// "error": 2,
 			"msg": err.Error(),
 		})
+		return
 	}
 	// 创建 sessionID，保存到 cookies 里以及 JSON 里。
-
+	// 设置 session
+	sid := session.NewSession(uid)
+	c.SetCookie("sid", sid, 3600, "/", "localhost", false, true)
+	c.String(http.StatusOK, "success")
 }

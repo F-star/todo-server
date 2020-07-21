@@ -62,19 +62,19 @@ func CreateUser(name string, password string) (string, error) {
 	return strconv.FormatInt(user.ID, 10), nil
 }
 
-func CheckUsernameAndPassword(name string, password string) error {
+func CheckUsernameAndPassword(name string, password string) (string, error) {
 	// return Error
 	user := User{
 		Name: name,
 	}
 	if err := config.DB.First(&user).Error; err != nil {
-		return err
+		return "", err
 	}
 
 	passwordHash := getHashWithPwdAndSalt(password, user.Salt)
 	if passwordHash == user.Password {
-		return nil
+		return strconv.FormatInt(user.ID, 10), nil
 	} else {
-		return errors.New("wrong password")
+		return "", errors.New("wrong password")
 	}
 }

@@ -32,12 +32,13 @@ func NewSession(uid string) (sid string) {
 	return sid
 }
 
-func getUIDBySID(sid string) string {
+func GetUIDBySID(sid string) string {
 	ctx := context.Background()
 	uid, err := redisapp.Rdb.Get(ctx, prefix+sid).Result()
 	if err != nil {
 		// TODO: err handle
 		log.Println(err)
+		return ""
 	}
 	log.Println("获取的uid为（检测如果找不到是否返回空字符串）：", uid)
 	return uid
