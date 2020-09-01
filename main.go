@@ -15,5 +15,5 @@ func main() {
 	ginvalid.RegisterValidation()
 	initapp.SetORM()
 	r := routes.SetupRouter()
-	r.Run()
+	r.Run(":4000")
 }

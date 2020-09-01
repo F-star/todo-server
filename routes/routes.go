@@ -9,7 +9,7 @@ import (
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
-	v1 := r.Group("/v1")
+	v1 := r.Group("/api/v1")
 	{
 		v1.GET("todos", todo.GetAllTodos)
 		v1.POST("todo", todo.CreateATodo)
